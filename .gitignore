@@ -1,0 +1,8 @@
+.idea
+env
+local_settings.py
+diploma-tourism2
+__pycache__/
+*/__pycache__/
+*.py[cod]
+.рус
