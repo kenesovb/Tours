@@ -2,6 +2,7 @@ from rest_framework import serializers
 
 from django.contrib.auth.models import User
 from .models import *
+from django.db.models import Avg
 
 
 class UserSerializers(serializers.ModelSerializer):
@@ -66,11 +67,18 @@ class TourPageSerializers(serializers.ModelSerializer):
     city = CitySerializer()
     type_of_tour = TypeOfTourSerializer()
     reviews = TourReviewSerializer(many=True)
+    average_review = serializers.SerializerMethodField()
 
     class Meta:
         model = Tour
         fields = ('creator', 'id', 'images', 'city', 'duration', 'title', 'reviews', 'text', 'type_of_tour', 'currency',
-                  'age_requirements', 'price')
+                  'age_requirements', 'price', 'average_review')
+
+    def get_average_review(self, obj):
+        av = TourReview.objects.filter(id=obj.id).aggregate(avg_rating=Avg('review_rating', output_field=models.IntegerField()))
+        if av['avg_rating'] is None:
+            return 0
+        return av['avg_rating']
 
     # def create(self, validated_data):
     #     images_data = self.context.get('view').request.FILES
@@ -101,13 +109,20 @@ class TourSerializers(serializers.ModelSerializer):
     images = TourImageSerializer(many=True)
     creator = UserSerializers()
     travel_agent_id = TravelAgentSerializer()
+    average_review = serializers.SerializerMethodField()
 
     class Meta:
         model = Tour
-        fields = ('creator', 'id', 'title', 'text', 'duration', 'images', 'travel_agent_id')
+        fields = ('creator', 'id', 'title', 'text', 'duration', 'images', 'travel_agent_id', 'average_review')
 
     def get_my_absolute_url(self, obj):
         return obj.get_absolute_url()  # return the absolute url of the object
+
+    def get_average_review(self, obj):
+        av = TourReview.objects.filter(id=obj.id).aggregate(avg_rating=Avg('review_rating'))
+        if av['avg_rating'] is None:
+            return 0
+        return av['avg_rating']
 
 
 class BookingSerializers(serializers.ModelSerializer):
