@@ -90,7 +90,7 @@ REST_FRAMEWORK = {
 SIMPLE_JWT = {
    'AUTH_HEADER_TYPES': ('JWT',),
 }
-
+# AUTH_USER_MODEL = 'fornow.CustomUser'
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 

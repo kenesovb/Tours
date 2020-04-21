@@ -11,6 +11,11 @@ class RegionAdmin(admin.ModelAdmin):
     list_display = ('region_name',)
 
 
+class ToursTravelAgentAdmin(admin.ModelAdmin):
+    model = ToursTravelAgent
+    list_display = ('travel_agent_name',)
+
+
 class CityAdmin(admin.ModelAdmin):
     model = City
     list_display = ['get_region_name', 'city_name', ]
@@ -26,25 +31,25 @@ class TourImageAdmin(admin.StackedInline):
 
 class TourCommentsAdmin(admin.StackedInline):
     model = TourReview
-    list_display = ['tour', 'comment_cretaer', 'comment_text', ]
+    list_display = ['tour', 'comment_creator', 'comment_text', ]
 
 
 class TourAdminFilter(admin.ModelAdmin):
     def get_queryset(self, request):
         qs = super(TourAdminFilter, self).get_queryset(request)
         if request.user.is_superuser:
-            return qs.filter(creater=request.user)
+            return qs.filter(creator=request.user)
         else:
-            return qs.filter(creater=request.user)
+            return qs.filter(creator=request.user)
 
     def save_model(self, request, obj, form, change):
-        obj.creater = request.user
+        obj.creator = request.user
         obj.save()
 
     def has_change_permission(self, request, obj=None):
         if not obj:
             return True
-        if request.user.is_superuser or obj.creater == request.user:
+        if request.user.is_superuser or obj.creator == request.user:
             return True
         else:
             return False
@@ -55,20 +60,22 @@ class TourAdminFilter(admin.ModelAdmin):
 class TourAdmin(TourAdminFilter):
     """ admin page of Tours"""
     # model = Tour
-    list_display = ['creater', 'created_date', 'title', 'text', 'get_city', 'get_region', 'get_type_of_tour',
-                    'duration', ]
+    list_display = ['creator', 'created_date', 'title', 'text', 'city', 'region', 'type_of_tour',
+                    'duration', 'tours_travel_agent', ]
     list_filter = ('city', 'region', 'type_of_tour',)
-    exclude = ['creater']
-    inlines = [TourImageAdmin, TourCommentsAdmin]
+    exclude = ['creator']
+    inlines = [TourImageAdmin,]
 
-    def get_city(self, obj):
+    def city(self, obj):
         return obj.city.city_name
 
-    def get_region(self, obj):
+    def region(self, obj):
         return obj.city.city_region.region_name
 
-    def get_type_of_tour(self, obj):
+    def type_of_tour(self, obj):
         return obj.type_of_tour.type_of_tour_name
+    def tours_travel_agent(self, obj):
+        return obj.travel_agent_id.travel_agent_name
 
 
 class TypeOfTourAdmin(admin.ModelAdmin):
@@ -76,6 +83,7 @@ class TypeOfTourAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Tour, TourAdmin)
+admin.site.register(ToursTravelAgent, ToursTravelAgentAdmin)
 admin.site.register(City, CityAdmin)
 admin.site.register(Region, RegionAdmin)
 admin.site.register(TypeOfTour, TypeOfTourAdmin)

@@ -1,8 +1,23 @@
 from django.db import models
+from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.models import User
-
+from django.utils.translation import ugettext_lazy as _
 
 # Create your models here.
+#
+# class CustomUser(AbstractUser):
+#     email = models.EmailField(_('email_address'), unique=True)
+#
+#     USERNAME_FIELD = 'email'
+#     REQUIRED_FIELDS = []
+#
+#     gender_choices = (
+#         ('M', 'Man'), ('W', 'Woman')
+#     )
+#
+#     date_of_birth = models.DateField(blank=True, null=True)
+#     gender = models.CharField(max_length=5, choices=gender_choices)
+
 
 class Region(models.Model):
     region_name = models.CharField(max_length=150, verbose_name='Regions of Kazakhstan')
@@ -30,6 +45,9 @@ class ToursTravelAgent(models.Model):
 
     travel_agent_name = models.CharField(max_length=150, verbose_name='Travel agent name')
     travel_agent_location = models.ForeignKey(City, verbose_name='Travel agent location', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.travel_agent_name
 
 
 class TypeOfTour(models.Model):
@@ -65,7 +83,7 @@ class Tour(models.Model):
         ('€', 'Euro'),
     )
 
-    creater = models.ForeignKey(User, verbose_name='Tour creater', on_delete=models.CASCADE)
+    creator = models.ForeignKey(User, verbose_name='Tour creator', on_delete=models.CASCADE)
     created_date = models.DateTimeField('created time of Tour', auto_now_add=True)
     title = models.CharField(max_length=150, verbose_name='Tour title')
     text = models.TextField()
@@ -95,7 +113,7 @@ class TourImage(models.Model):
     """" Images for Tour """
 
     tour = models.ForeignKey(Tour, related_name='images', on_delete=models.CASCADE)
-    file = models.ImageField(upload_to=content_file_name)
+    file = models.ImageField(upload_to=content_file_name, blank=True, null=False)
 
     class Meta:
         verbose_name = 'Tours Images model'

@@ -14,7 +14,9 @@ class UserSerializers(serializers.ModelSerializer):
 
 class TourImageSerializer(serializers.ModelSerializer):
     """ Serializer for IMAGE of tour """
+
     file = serializers.ImageField(use_url=True)
+
     class Meta:
         model = TourImage
         fields = ('file',)
@@ -59,7 +61,7 @@ class TourReviewSerializer(serializers.ModelSerializer):
 class TourPageSerializers(serializers.ModelSerializer):
     """ Serializer for TourPage of Tour model """
 
-    creater = UserSerializers()
+    creator = UserSerializers()
     images = TourImageSerializer(many=True, read_only=True)
     city = CitySerializer()
     type_of_tour = TypeOfTourSerializer()
@@ -67,13 +69,13 @@ class TourPageSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = Tour
-        fields = ('creater', 'id', 'images', 'city', 'duration', 'title', 'reviews', 'text', 'type_of_tour', 'currency',
+        fields = ('creator', 'id', 'images', 'city', 'duration', 'title', 'reviews', 'text', 'type_of_tour', 'currency',
                   'age_requirements', 'price')
 
     # def create(self, validated_data):
     #     images_data = self.context.get('view').request.FILES
     #     tour = Tour.objects.create(title=validated_data.get('title'),
-    #                                 creater=validated_data.get('user'),
+    #                                 creator=validated_data.get('user'),
     #                                 text=validated_data.get('text'),
     #                                 city=validated_data.get('city'),
     #                                 region=validated_data.get('region'),
@@ -97,12 +99,12 @@ class TravelAgentSerializer(serializers.ModelSerializer):
 class TourSerializers(serializers.ModelSerializer):
     """ Serializer for Tour model """
     images = TourImageSerializer(many=True)
-    creater = UserSerializers()
+    creator = UserSerializers()
     travel_agent_id = TravelAgentSerializer()
 
     class Meta:
         model = Tour
-        fields = ('creater', 'id', 'title', 'text', 'duration', 'images', 'travel_agent_id')
+        fields = ('creator', 'id', 'title', 'text', 'duration', 'images', 'travel_agent_id')
 
     def get_my_absolute_url(self, obj):
         return obj.get_absolute_url()  # return the absolute url of the object
@@ -129,7 +131,7 @@ class UserPageSerializers(serializers.ModelSerializer):
 class TourReviewsPostSerializers(serializers.ModelSerializer):
     """ Serializers to post comments """
 
-    # comment_creater = UserSerializers()
+    # comment_creator = UserSerializers()
 
     class Meta:
         model = TourReview

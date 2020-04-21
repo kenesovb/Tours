@@ -2,6 +2,7 @@
 env
 local_settings.py
 diploma-tourism2
+media
 __pycache__/
 */__pycache__/
 *.py[cod]
