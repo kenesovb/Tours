@@ -40,6 +40,38 @@ class City(models.Model):
         verbose_name = 'Cities of Kazakhstan'
 
 
+class Hotels(models.Model):
+    """ Hotel for tour if provide """
+
+    hotel_stars_choices = (
+        ('1', '1'),
+        ('2', '2'),
+        ('3', '3'),
+        ('4', '4'),
+        ('5', '5')
+    )
+
+    hotel_name = models.CharField(max_length=150, verbose_name='Hotel name')
+    hotel_city = models.ForeignKey(City, on_delete=models.CASCADE)
+    hotel_stars = models.CharField(max_length=10, choices=hotel_stars_choices)
+
+    def __str__(self):
+        return self.hotel_name
+
+
+def content_image_name(instance, filename):
+    """ Where to save Images"""
+
+    return 'hotel_{0}/{1}'.format(instance.hotel.id, filename)
+
+
+class HotelsImages(models.Model):
+    """Hotel Images"""
+
+    hotel = models.ForeignKey(Hotels,related_name='hotel_images', on_delete=models.CASCADE)
+    image = models.ImageField(upload_to=content_image_name, blank=True, null=False)
+
+
 class ToursTravelAgent(models.Model):
     """ Tours Travel Agent which has made that tour """
 
@@ -88,6 +120,7 @@ class Tour(models.Model):
     title = models.CharField(max_length=150, verbose_name='Tour title')
     text = models.TextField()
     city = models.ForeignKey(City, on_delete=models.CASCADE)
+    tour_end_city = models.ForeignKey(City,related_name='city_end', on_delete=models.CASCADE)
     region = models.ForeignKey(Region, on_delete=models.CASCADE)
     price = models.IntegerField()
     currency = models.CharField(max_length=50, choices=currency_choices)
@@ -95,6 +128,8 @@ class Tour(models.Model):
     age_requirements = models.CharField(max_length=50, choices=age_choices)
     duration = models.CharField(max_length=50, choices=duration_choices)
     travel_agent_id = models.ForeignKey(ToursTravelAgent, related_name='booking_travel_agent', on_delete=models.CASCADE)
+    hotel = models.ForeignKey(Hotels, related_name='hotel_id', on_delete=models.CASCADE, null=True)
+
 
     class Meta:
         verbose_name = 'Tour of the site'
@@ -130,6 +165,22 @@ class TourReview(models.Model):
     review_rating = models.IntegerField(verbose_name='Review Rating')
 
 
+class TourDetails(models.Model):
+    """ Tour details about ordering """
+
+    tour = models.ForeignKey(Tour, related_name='tour_detail', verbose_name='Tour', on_delete=models.CASCADE)
+    tour_start_date = models.DateField()
+    tour_end_date = models.DateField()
+    tour_person_number = models.IntegerField(verbose_name='Number of persons for one Tour')
+    cur_person_number = models.IntegerField(verbose_name='Current Number of persons for one Tour', default=0, null=True)
+
+    class Meta:
+        verbose_name = "Tour Details"
+
+    def __str__(self):
+        return self.tour.title
+
+
 class Booking(models.Model):
     """ Booking of tours """
 
@@ -140,6 +191,6 @@ class Booking(models.Model):
     )
 
     booking_creator = models.ForeignKey(User, related_name='bookings', verbose_name='Booking user', on_delete=models.CASCADE)
-    tour = models.ForeignKey(Tour, related_name='booking_tour', on_delete=models.CASCADE)
+    tour_detail = models.ForeignKey(TourDetails, related_name='booking_tour', on_delete=models.CASCADE)
     booking_price = models.IntegerField()
     booking_status = models.CharField(max_length=50, choices=booking_choices)

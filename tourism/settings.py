@@ -16,7 +16,7 @@ from  decouple import config
 import dj_database_url
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
+TEMPLATE_DIRS = (( BASE_DIR +'/templates/' ),)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
@@ -63,7 +63,7 @@ ROOT_URLCONF = 'tourism.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR + '/templates/'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -173,7 +173,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
-# EMAIL_HOST_USER = config('GMAIL_MAIL')
-# EMAIL_HOST_PASSWORD = config('GMAIL_MAIL_PASS')
+EMAIL_HOST_USER = 'kenesovbt@gmail.com'
+EMAIL_HOST_PASSWORD = 'Bainurkenes1357!'
 
 # django_heroku.settings(locals())

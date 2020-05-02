@@ -10,7 +10,7 @@ class UserSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ("username",)
+        fields = ("username", "first_name", "last_name")
 
 
 class TourImageSerializer(serializers.ModelSerializer):
@@ -21,7 +21,6 @@ class TourImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = TourImage
         fields = ('file',)
-
 
 
 class RegionSerializer(serializers.ModelSerializer):
@@ -59,6 +58,14 @@ class TourReviewSerializer(serializers.ModelSerializer):
         fields = ('review_creator', 'review_title', 'review_text', 'review_created_data', 'review_rating')
 
 
+class TourDetailsSerializers(serializers.ModelSerializer):
+    """ Serializer for Tour details"""
+
+    class Meta:
+        model = TourDetails
+        fields = ('id', 'tour_start_date', 'tour_end_date', 'tour_person_number', 'cur_person_number', )
+
+
 class TourPageSerializers(serializers.ModelSerializer):
     """ Serializer for TourPage of Tour model """
 
@@ -68,31 +75,18 @@ class TourPageSerializers(serializers.ModelSerializer):
     type_of_tour = TypeOfTourSerializer()
     reviews = TourReviewSerializer(many=True)
     average_review = serializers.SerializerMethodField()
+    tour_detail = TourDetailsSerializers(many=True)
 
     class Meta:
         model = Tour
-        fields = ('creator', 'id', 'images', 'city', 'duration', 'title', 'reviews', 'text', 'type_of_tour', 'currency',
-                  'age_requirements', 'price', 'average_review')
+        fields = ('creator', 'id', 'title', 'text', 'images', 'city', 'duration',  'type_of_tour', 'currency',
+                  'age_requirements', 'price', 'reviews', 'average_review', 'tour_detail')
 
     def get_average_review(self, obj):
         av = TourReview.objects.filter(id=obj.id).aggregate(avg_rating=Avg('review_rating', output_field=models.IntegerField()))
         if av['avg_rating'] is None:
             return 0
         return av['avg_rating']
-
-    # def create(self, validated_data):
-    #     images_data = self.context.get('view').request.FILES
-    #     tour = Tour.objects.create(title=validated_data.get('title'),
-    #                                 creator=validated_data.get('user'),
-    #                                 text=validated_data.get('text'),
-    #                                 city=validated_data.get('city'),
-    #                                 region=validated_data.get('region'),
-    #                                 type_of_tour=validated_data.get('type_of_tour'),
-    #                                 duration=validated_data.get('duration'))
-    #     for image_data in images_data.values():
-    #         TourImage.objects.create(tour=tour,file=image_data)
-
-    #     return tour
 
 
 class TravelAgentSerializer(serializers.ModelSerializer):
@@ -125,13 +119,23 @@ class TourSerializers(serializers.ModelSerializer):
         return av['avg_rating']
 
 
-class BookingSerializers(serializers.ModelSerializer):
-    """ Serializer for Booking to add booking into users page"""
+class UserPageTourDetailsSerializers(serializers.ModelSerializer):
+    """"""
+
     tour = TourPageSerializers()
 
     class Meta:
+        model = TourDetails
+        fields = ('id', 'tour_start_date', 'tour_end_date', 'tour_person_number', 'cur_person_number', 'tour')
+
+
+class BookingSerializers(serializers.ModelSerializer):
+    """ Serializer for Booking to add booking into users page"""
+    tour_detail = UserPageTourDetailsSerializers()
+
+    class Meta:
         model = Booking
-        fields = ('id', 'booking_creator', 'booking_price', 'tour', 'booking_status')
+        fields = ('id', 'booking_creator', 'booking_price', 'tour_detail', 'booking_status')
 
 
 class UserPageSerializers(serializers.ModelSerializer):
@@ -159,3 +163,30 @@ class BookingPostSerializers(serializers.ModelSerializer):
     class Meta:
         model = Booking
         fields = ('booking_status',)
+
+
+class TourDetailsPostSerializers(serializers.ModelSerializer):
+    """"""
+    class Meta:
+        model = TourDetails
+        fields = ('cur_person_number',)
+
+
+class HotelsImagesSerializers(serializers.ModelSerializer):
+    """"""
+    image = serializers.ImageField(use_url=True)
+
+    class Meta:
+        model = HotelsImages
+        fields = ('image',)
+
+
+class HotelSerializers(serializers.ModelSerializer):
+    """ Serializer for hotels model """
+
+    hotel_images = HotelsImagesSerializers(many=True)
+    hotel_city = CitySerializer()
+
+    class Meta:
+        model = Hotels
+        fields = ('id', 'hotel_name', 'hotel_stars', 'hotel_city', 'hotel_images')
