@@ -79,12 +79,16 @@ class UserDetailPDFView(APIView):
         book = Booking.objects.filter(booking_creator=user, booking_status='Approved')
         start_date = str(book[0].tour_detail.tour_start_date)
         end_date = str(book[0].tour_detail.tour_end_date)
+        total_amount = 0
+        for b in book:
+            total_amount = total_amount + int(b.tour_detail.tour.price * b.booking_number_of_persons)
         paragraph = {
             "FirstName": user.username,
             "LastName": user.last_name,
             "bookings": book,
             "start_date": start_date,
-            "end_date": end_date
+            "end_date": end_date,
+            "total_amount": total_amount
         }
         pdf = render_to_pdf('pdf_template.html', paragraph)
         if pdf:
@@ -101,12 +105,15 @@ class UserDetailPDFViewDownload(APIView):
         book = Booking.objects.filter(booking_creator=user, booking_status='Approved')
         start_date = str(book[0].tour_detail.tour_start_date)
         end_date = str(book[0].tour_detail.tour_end_date)
+        total_amount = 0
+
         paragraph = {
             "FirstName": user.username,
             "LastName": user.last_name,
             "bookings": book,
             "start_date": start_date,
-            "end_date": end_date
+            "end_date": end_date,
+            "total_amount": total_amount
         }
         pdf = render_to_pdf('pdf_template.html', paragraph)
         if pdf:
@@ -140,8 +147,6 @@ class TourBooking(APIView):
         tour = get_object_or_404(Tour, pk=pk)
         tours = get_object_or_404(TourDetails, pk=detailid)
         serializer = BookingPostSerializers(data=request.data)
-        tours.cur_person_number = tours.cur_person_number+int(request.data['booking_number_of_persons'])
-        tours.save()
         if serializer.is_valid():
             serializer.save(booking_creator=request.user, tour_detail=tours, booking_price=tour.price,
                             booking_number_of_persons=request.data['booking_number_of_persons'])
@@ -154,6 +159,9 @@ class BookingPayView(APIView):
 
     def post(self, request):
         bookings = Booking.objects.filter(booking_creator=request.user, booking_status='Waiting for payment')
+        for tours in bookings:
+            tours.tour_detail.cur_person_number = tours.tour_detail.cur_person_number + int(tours.booking_number_of_persons)
+            tours.tour_detail.save()
         for book in bookings:
             book.booking_status = 'Approved'
             book.save()
