@@ -45,3 +45,4 @@ virtualenv-clone==0.5.3
 virtualenvwrapper==4.8.4
 whitenoise==5.0.1
 wrapt==1.11.2
+xhtml2pdf

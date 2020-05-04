@@ -157,3 +157,11 @@ class HotelsView(APIView):
         hotels = Hotels.objects.all()
         serializer = HotelSerializers(hotels, many=True)
         return Response(serializer.data)
+
+
+class HotelPageView(APIView):
+    """"""
+    def get(self, request):
+        hotels = Hotels.objects.all()
+        serializer = HotelSerializers(hotels, many=True)
+        return Response(serializer.data)

@@ -86,6 +86,7 @@ class TourPageSerializers(serializers.ModelSerializer):
     average_review = serializers.SerializerMethodField()
     tour_detail = TourDetailsSerializers(many=True)
     travel_agent_id = TravelAgentSerializer()
+    hotel = HotelSerializers()
 
     class Meta:
         model = Tour
@@ -157,7 +158,7 @@ class BookingSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = Booking
-        fields = ('id', 'booking_creator', 'booking_price', 'tour_detail', 'booking_status')
+        fields = ('id', 'booking_creator', 'booking_price', 'tour_detail', 'booking_status', 'booking_number_of_persons')
 
 
 class UserPageSerializers(serializers.ModelSerializer):
