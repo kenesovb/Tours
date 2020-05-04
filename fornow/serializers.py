@@ -59,7 +59,6 @@ class HotelsImagesSerializers(serializers.ModelSerializer):
         fields = ('image',)
 
 
-
 class TourReviewSerializer(serializers.ModelSerializer):
     """ Serializer for Regions """
     review_creator = UserSerializers()
@@ -88,13 +87,21 @@ class TravelAgentSerializer(serializers.ModelSerializer):
 
 class HotelSerializers(serializers.ModelSerializer):
     """ Serializer for hotels model """
+    hotel_images = HotelsImagesSerializers(many=True)
 
+    class Meta:
+        model = Hotels
+        fields = ('id', 'hotel_name', 'hotel_stars', 'hotel_images')
+
+
+class HotelPageSerializers(serializers.ModelSerializer):
+    """Hotel pages ser"""
     hotel_images = HotelsImagesSerializers(many=True)
     hotel_city = CitySerializer()
 
     class Meta:
         model = Hotels
-        fields = ('id', 'hotel_name', 'hotel_stars', 'hotel_city', 'hotel_images')
+        fields = ('id', 'hotel_name', 'hotel_stars', 'hotel_description', 'hotel_city', 'hotel_images')
 
 
 class TourPageSerializers(serializers.ModelSerializer):

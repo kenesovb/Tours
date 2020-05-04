@@ -15,7 +15,7 @@ from reportlab.lib.pagesizes import A4
 
 from .models import Tour, Booking, TourImage, Hotels, TourDetails
 from .serializers import (TourSerializers, TourPageSerializers, UserPageSerializers, TourReviewsPostSerializers, BookingPostSerializers, HotelSerializers,
-                          TourDetailsPostSerializers, BookingSerializers)
+                          TourDetailsPostSerializers, BookingSerializers, HotelPageSerializers)
 
 
 # Create your views here.
@@ -140,15 +140,24 @@ class TourBooking(APIView):
         tour = get_object_or_404(Tour, pk=pk)
         tours = get_object_or_404(TourDetails, pk=detailid)
         serializer = BookingPostSerializers(data=request.data)
-        tours.cur_person_number = tours.cur_person_number+int(request.data['cur_person_number'])
+        tours.cur_person_number = tours.cur_person_number+int(request.data['booking_number_of_persons'])
         tours.save()
         if serializer.is_valid():
-            serializer.save(booking_creator=request.user, tour_detail=tours, booking_price=tour.price)
+            serializer.save(booking_creator=request.user, tour_detail=tours, booking_price=tour.price,
+                            booking_number_of_persons=request.data['booking_number_of_persons'])
             return Response(status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    # def update(self, instance, validated_data):
-    #     instance.cur_person_number = validated_data['cur_person_number']
-    #     instance.save()
+
+
+class BookingPayView(APIView):
+    """all Bookings payment update status to approved """
+
+    def post(self, request):
+        bookings = Booking.objects.filter(booking_creator=request.user, booking_status='Waiting for payment')
+        for book in bookings:
+            book.booking_status = 'Approved'
+            book.save()
+        return Response(status=status.HTTP_201_CREATED)
 
 
 class HotelsView(APIView):
@@ -161,7 +170,7 @@ class HotelsView(APIView):
 
 class HotelPageView(APIView):
     """"""
-    def get(self, request):
-        hotels = Hotels.objects.all()
-        serializer = HotelSerializers(hotels, many=True)
+    def get(self, request, pk):
+        hotels = get_object_or_404(Hotels, pk=pk)
+        serializer = HotelPageSerializers(hotels)
         return Response(serializer.data)

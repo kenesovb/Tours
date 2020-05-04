@@ -52,6 +52,7 @@ class Hotels(models.Model):
     )
 
     hotel_name = models.CharField(max_length=150, verbose_name='Hotel name')
+    hotel_description = models.TextField(verbose_name='Hotel description')
     hotel_city = models.ForeignKey(City, on_delete=models.CASCADE)
     hotel_stars = models.CharField(max_length=10, choices=hotel_stars_choices)
 
