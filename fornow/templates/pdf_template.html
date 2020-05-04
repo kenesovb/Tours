@@ -1,7 +1,7 @@
 <html lang="en">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 <head>
-  <title>Ticket for {{FirstName}} + {{LastName}}</title>
+  <title>Ticket for {{FirstName}} {{LastName}}</title>
   <style>
   </style>
 </head>
@@ -11,10 +11,6 @@
     <p> <font size="+5">Travel Ticket </font></p>
     <p style="border-bottom: solid"> <font size="+4">Dear, {{FirstName}} {{LastName}} here your travel information</font></p>
     </div>
-    {% for book in bookings %}
-        {%if not forloop.first%}
-        <p style="border-bottom: solid"> <font size="+4">Travel information</font></p>
-        {% endif %}
         <p> <font size="+4"> Travel Agent: {{ book.tour_detail.tour.travel_agent_id }}</font> </p>
         <p><font size="+4">Tour name: {{book.tour_detail.tour.title}} </font></p>
         <p><font size="+2">Description: {{book.tour_detail.tour.text}}</font></p>
@@ -36,8 +32,7 @@
         <p><font size="+4">End date: {{end_date}}</font></p>
         <p style="border-bottom: solid"><font size="+4">Duration: {{book.tour_detail.tour.duration}} days</font></p>
   <br><br>
-    {% endfor %}
   </div>
-    <p align="right"><font size="+4">Total price: {{total_amount}} tenge</font></p>
+    <p align="right"><font size="+4">Total price: {{total_amount}} {{book.tour_detail.tour.currency}}</font></p>
 </body>
 </html>

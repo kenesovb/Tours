@@ -14,6 +14,6 @@ urlpatterns = [
     path('users/me', UserDetail.as_view()),
     path('users/me/<int:pk>', UserDetailDeleteBooking.as_view()),
     path('users/me/payment', BookingPayView.as_view()),
-    path('users/me/pdf', UserDetailPDFView.as_view()),
-    path('users/me/pdf/download', UserDetailPDFViewDownload.as_view()),
+    path('users/me/<int:pk>/pdf', UserDetailPDFView.as_view()),
+    path('users/me/<int:pk>/pdf/download', UserDetailPDFViewDownload.as_view()),
 ]

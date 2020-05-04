@@ -74,18 +74,16 @@ class UserDetailDeleteBooking(APIView):
 
 class UserDetailPDFView(APIView):
     """PDF of tour ticket """
-    def get(self, request):
+    def get(self, request, pk):
         user = get_object_or_404(User, username=self.request.user)
-        book = Booking.objects.filter(booking_creator=user, booking_status='Approved')
-        start_date = str(book[0].tour_detail.tour_start_date)
-        end_date = str(book[0].tour_detail.tour_end_date)
-        total_amount = 0
-        for b in book:
-            total_amount = total_amount + int(b.tour_detail.tour.price * b.booking_number_of_persons)
+        book = get_object_or_404(Booking, pk=pk)
+        start_date = str(book.tour_detail.tour_start_date)
+        end_date = str(book.tour_detail.tour_end_date)
+        total_amount = book.booking_number_of_persons * book.tour_detail.tour.price
         paragraph = {
-            "FirstName": user.username,
+            "FirstName": user.first_name,
             "LastName": user.last_name,
-            "bookings": book,
+            "book": book,
             "start_date": start_date,
             "end_date": end_date,
             "total_amount": total_amount
@@ -100,21 +98,21 @@ class UserDetailPDFView(APIView):
 
 class UserDetailPDFViewDownload(APIView):
     """PDF of tour ticket """
-    def get(self, request):
+    def get(self, request, pk):
         user = get_object_or_404(User, username=self.request.user)
-        book = Booking.objects.filter(booking_creator=user, booking_status='Approved')
-        start_date = str(book[0].tour_detail.tour_start_date)
-        end_date = str(book[0].tour_detail.tour_end_date)
-        total_amount = 0
-
+        book = get_object_or_404(Booking, pk=pk)
+        start_date = str(book.tour_detail.tour_start_date)
+        end_date = str(book.tour_detail.tour_end_date)
+        total_amount = book.booking_number_of_persons * book.tour_detail.tour.price
         paragraph = {
-            "FirstName": user.username,
+            "FirstName": user.first_name,
             "LastName": user.last_name,
-            "bookings": book,
+            "book": book,
             "start_date": start_date,
             "end_date": end_date,
             "total_amount": total_amount
         }
+        pdf = render_to_pdf('pdf_template.html', paragraph)
         pdf = render_to_pdf('pdf_template.html', paragraph)
         if pdf:
             response = HttpResponse(content_type='application/pdf')
@@ -158,13 +156,12 @@ class BookingPayView(APIView):
     """all Bookings payment update status to approved """
 
     def post(self, request):
-        bookings = Booking.objects.filter(booking_creator=request.user, booking_status='Waiting for payment')
-        for tours in bookings:
-            tours.tour_detail.cur_person_number = tours.tour_detail.cur_person_number + int(tours.booking_number_of_persons)
-            tours.tour_detail.save()
-        for book in bookings:
-            book.booking_status = 'Approved'
-            book.save()
+        bookings = get_object_or_404(Booking, pk=request.data['id'])
+        bookings.tour_detail.cur_person_number = bookings.tour_detail.cur_person_number + \
+                                                 int(bookings.booking_number_of_persons)
+        bookings.booking_status = 'Approved'
+        bookings.tour_detail.save()
+        bookings.save()
         return Response(status=status.HTTP_201_CREATED)
 
 
