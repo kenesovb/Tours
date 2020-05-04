@@ -194,3 +194,4 @@ class Booking(models.Model):
     tour_detail = models.ForeignKey(TourDetails, related_name='booking_tour', on_delete=models.CASCADE)
     booking_price = models.IntegerField()
     booking_status = models.CharField(max_length=50, choices=booking_choices)
+    booking_number_of_persons = models.IntegerField()

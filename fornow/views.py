@@ -7,7 +7,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.core.mail import send_mail, EmailMessage
-import io
+from io import BytesIO
 from django.http import HttpResponse
 from xhtml2pdf import pisa
 from reportlab.pdfgen import canvas
@@ -15,7 +15,7 @@ from reportlab.lib.pagesizes import A4
 
 from .models import Tour, Booking, TourImage, Hotels, TourDetails
 from .serializers import (TourSerializers, TourPageSerializers, UserPageSerializers, TourReviewsPostSerializers, BookingPostSerializers, HotelSerializers,
-                          TourDetailsPostSerializers)
+                          TourDetailsPostSerializers, BookingSerializers)
 
 
 # Create your views here.
@@ -62,7 +62,8 @@ class UserDetail(APIView):
         serializer = UserPageSerializers(user)
         return Response(serializer.data)
 
-class UserDetailDelAndPdf(APIView):
+
+class UserDetailDeleteBooking(APIView):
     """ User page delete tour and create PDF"""
     permission_classes = [permissions.IsAuthenticated, ]
     def delete(self, request, pk, format=None):
@@ -70,16 +71,21 @@ class UserDetailDelAndPdf(APIView):
         book.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-    def get(self, request, pk,format=None):
+
+class UserDetailPDFView(APIView):
+    """PDF of tour ticket """
+    def get(self, request):
         user = get_object_or_404(User, username=self.request.user)
-        book = get_object_or_404(Booking, pk=pk)
-        image = TourImage.objects.filter(tour=book.tour.id)
-        template = get_template('pdf_template.html')
+        book = Booking.objects.filter(booking_creator=user, booking_status='Approved')
+        start_date = str(book[0].tour_detail.tour_start_date)
+        end_date = str(book[0].tour_detail.tour_end_date)
         paragraph = {
             "FirstName": user.username,
             "LastName": user.last_name,
+            "bookings": book,
+            "start_date": start_date,
+            "end_date": end_date
         }
-        html = template.render(paragraph)
         pdf = render_to_pdf('pdf_template.html', paragraph)
         if pdf:
            response = HttpResponse(pdf, content_type='application/pdf')
@@ -88,14 +94,36 @@ class UserDetailDelAndPdf(APIView):
         # ms.send()
         return response
 
+class UserDetailPDFViewDownload(APIView):
+    """PDF of tour ticket """
+    def get(self, request):
+        user = get_object_or_404(User, username=self.request.user)
+        book = Booking.objects.filter(booking_creator=user, booking_status='Approved')
+        start_date = str(book[0].tour_detail.tour_start_date)
+        end_date = str(book[0].tour_detail.tour_end_date)
+        paragraph = {
+            "FirstName": user.username,
+            "LastName": user.last_name,
+            "bookings": book,
+            "start_date": start_date,
+            "end_date": end_date
+        }
+        pdf = render_to_pdf('pdf_template.html', paragraph)
+        if pdf:
+            response = HttpResponse(content_type='application/pdf')
+            response['Content-Disposition'] = 'attachment; filename=ticket.pdf'
+            response.write(pdf)
+        return response
+
+
 
 def render_to_pdf(template_src, context_dict={}):
     template = get_template(template_src)
     html = template.render(context_dict)
-    result = io.BytesIO()
-    pdf = pisa.pisaDocument(io.BytesIO(html.encode("ISO-8859-1")), result)
+    result = BytesIO()
+    pdf = pisa.pisaDocument(BytesIO(html.encode('UTF-8')), result)
     if not pdf.err:
-        return HttpResponse(result.getvalue(), content_type='application/pdf')
+        return result.getvalue()
 
 
 class TourBooking(APIView):

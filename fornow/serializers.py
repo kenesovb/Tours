@@ -66,6 +66,15 @@ class TourDetailsSerializers(serializers.ModelSerializer):
         fields = ('id', 'tour_start_date', 'tour_end_date', 'tour_person_number', 'cur_person_number', )
 
 
+class TravelAgentSerializer(serializers.ModelSerializer):
+    """Travel Agent Serializer """
+    travel_agent_location = CitySerializer()
+
+    class Meta:
+        model = ToursTravelAgent
+        fields = ('travel_agent_name', 'travel_agent_location')
+
+
 class TourPageSerializers(serializers.ModelSerializer):
     """ Serializer for TourPage of Tour model """
 
@@ -76,26 +85,18 @@ class TourPageSerializers(serializers.ModelSerializer):
     reviews = TourReviewSerializer(many=True)
     average_review = serializers.SerializerMethodField()
     tour_detail = TourDetailsSerializers(many=True)
+    travel_agent_id = TravelAgentSerializer()
 
     class Meta:
         model = Tour
         fields = ('creator', 'id', 'title', 'text', 'images', 'city', 'duration',  'type_of_tour', 'currency',
-                  'age_requirements', 'price', 'reviews', 'average_review', 'tour_detail')
+                  'age_requirements', 'price', 'reviews', 'average_review', 'tour_detail', 'travel_agent_id')
 
     def get_average_review(self, obj):
         av = TourReview.objects.filter(id=obj.id).aggregate(avg_rating=Avg('review_rating', output_field=models.IntegerField()))
         if av['avg_rating'] is None:
             return 0
         return av['avg_rating']
-
-
-class TravelAgentSerializer(serializers.ModelSerializer):
-    """Travel Agent Serializer """
-    travel_agent_location = CitySerializer()
-
-    class Meta:
-        model = ToursTravelAgent
-        fields = ('travel_agent_name', 'travel_agent_location')
 
 
 class TourSerializers(serializers.ModelSerializer):
@@ -119,10 +120,31 @@ class TourSerializers(serializers.ModelSerializer):
         return av['avg_rating']
 
 
+class UserPageTourSerializers(serializers.ModelSerializer):
+    creator = UserSerializers()
+    images = TourImageSerializer(many=True, read_only=True)
+    city = CitySerializer()
+    type_of_tour = TypeOfTourSerializer()
+    reviews = TourReviewSerializer(many=True)
+    average_review = serializers.SerializerMethodField()
+    travel_agent_id = TravelAgentSerializer()
+
+    class Meta:
+        model = Tour
+        fields = ('creator', 'id', 'title', 'text', 'images', 'city', 'duration',  'type_of_tour', 'currency',
+                  'age_requirements', 'price', 'reviews', 'average_review','travel_agent_id')
+
+    def get_average_review(self, obj):
+        av = TourReview.objects.filter(id=obj.id).aggregate(avg_rating=Avg('review_rating', output_field=models.IntegerField()))
+        if av['avg_rating'] is None:
+            return 0
+        return av['avg_rating']
+
+
 class UserPageTourDetailsSerializers(serializers.ModelSerializer):
     """"""
 
-    tour = TourPageSerializers()
+    tour = UserPageTourSerializers()
 
     class Meta:
         model = TourDetails

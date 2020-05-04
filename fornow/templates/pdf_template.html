@@ -1,14 +1,31 @@
-<html>
+<html lang="en">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 <head>
-  <title>Your tour ticket {{FirstName}}</title>
+  <title>Ticket for {{FirstName}} + {{LastName}}</title>
   <style>
   </style>
 </head>
 <body>
-  <h1>Test Template</h1>
-  {% for paragraph in paragraphs %}
-    <p>{{ paragraph }}</p>
-  {% endfor %}
- <p><img src="{{image}}" width="300px"></p>
+  <h1>Hello, {{FirstName}} {{LastName}} that is your ticket</h1>
+  </div>
+    {% for book in bookings %}
+      <p> Travel Agent of Tour: {{ book.tour_detail.tour.travel_agent_id }}</p>
+      <p>Tour name: {{book.tour_detail.tour.title}}</p>
+      <p>Tour Description: {{book.tour_detail.tour.text}}</p>
+      <p>Tour Duration: {{book.tour_detail.tour.duration}} days</p>
+      <p>Tour start date: {{start_date}}</p>
+      <p>Tour end date: {{end_date}}</p>
+      <p>Tour start city: {{book.tour_detail.tour.city}}</p>
+      <p>Tour end city: {{book.tour_detail.tour.tour_end_city}}</p>
+      {% if book.tour_detail.tour.hotel %}
+      <p>Tour Hotel: {{book.tour_detail.tour.hotel}}</p>
+      {% else %}
+        <p>Travel agent does not provide Hotel for this tour</p>
+      {% endif %}
+      <p>Tour price: {{book.tour_detail.tour.price}} {{book.tour_detail.tour.currency}}</p>
+      <p>Tour age requirements: {{book.tour_detail.tour.age_requirements}}+</p>
+      <p>Tour type: {{book.tour_detail.tour.type_of_tour}}</p>
+    {% endfor %}
+  <div>
 </body>
 </html>
