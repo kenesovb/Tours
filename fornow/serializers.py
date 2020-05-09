@@ -49,7 +49,6 @@ class TypeOfTourSerializer(serializers.ModelSerializer):
         fields = ('type_of_tour_name',)
 
 
-
 class HotelsImagesSerializers(serializers.ModelSerializer):
     """"""
     image = serializers.ImageField(use_url=True)
@@ -120,7 +119,8 @@ class TourPageSerializers(serializers.ModelSerializer):
     class Meta:
         model = Tour
         fields = ('creator', 'id', 'title', 'text', 'images', 'city', 'duration',  'type_of_tour', 'currency',
-                  'age_requirements', 'price', 'reviews', 'average_review', 'tour_detail', 'travel_agent_id', 'hotel')
+                  'age_requirements', 'price', 'reviews', 'average_review', 'tour_detail', 'travel_agent_id', 'hotel',
+                  'tour_rating')
 
     def get_average_review(self, obj):
         av = TourReview.objects.filter(id=obj.id).aggregate(avg_rating=Avg('review_rating', output_field=models.IntegerField()))
@@ -138,7 +138,7 @@ class TourSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = Tour
-        fields = ('creator', 'id', 'title', 'text', 'duration', 'images', 'travel_agent_id', 'average_review')
+        fields = ('creator', 'id', 'title', 'text', 'duration', 'images', 'travel_agent_id', 'average_review', 'tour_rating')
 
     def get_my_absolute_url(self, obj):
         return obj.get_absolute_url()  # return the absolute url of the object
@@ -162,7 +162,7 @@ class UserPageTourSerializers(serializers.ModelSerializer):
     class Meta:
         model = Tour
         fields = ('creator', 'id', 'title', 'text', 'images', 'city', 'duration',  'type_of_tour', 'currency',
-                  'age_requirements', 'price', 'reviews', 'average_review','travel_agent_id')
+                  'age_requirements', 'price', 'reviews', 'average_review','travel_agent_id', 'tour_rating')
 
     def get_average_review(self, obj):
         av = TourReview.objects.filter(id=obj.id).aggregate(avg_rating=Avg('review_rating', output_field=models.IntegerField()))

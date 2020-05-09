@@ -157,6 +157,9 @@ class BookingPayView(APIView):
 
     def post(self, request):
         bookings = get_object_or_404(Booking, pk=request.data['id'])
+        tour = get_object_or_404(Tour, pk=bookings.tour_detail.tour.id)
+        tour.tour_rating = tour.tour_rating+int(bookings.booking_number_of_persons)
+        tour.save()
         bookings.tour_detail.cur_person_number = bookings.tour_detail.cur_person_number + \
                                                  int(bookings.booking_number_of_persons)
         bookings.booking_status = 'Approved'

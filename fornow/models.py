@@ -130,7 +130,7 @@ class Tour(models.Model):
     duration = models.CharField(max_length=50, choices=duration_choices)
     travel_agent_id = models.ForeignKey(ToursTravelAgent, related_name='booking_travel_agent', on_delete=models.CASCADE)
     hotel = models.ForeignKey(Hotels, related_name='hotel_id', on_delete=models.CASCADE, null=True)
-
+    tour_rating = models.IntegerField()
 
     class Meta:
         verbose_name = 'Tour of the site'
