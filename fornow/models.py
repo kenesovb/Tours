@@ -84,6 +84,7 @@ class ToursTravelAgent(models.Model):
 
 
 class TypeOfTour(models.Model):
+    """Type of tour"""
     type_of_tour_name = models.CharField(max_length=150, verbose_name='What Type of tour')
 
     def __str__(self):
@@ -125,7 +126,7 @@ class Tour(models.Model):
     region = models.ForeignKey(Region, on_delete=models.CASCADE)
     price = models.IntegerField()
     currency = models.CharField(max_length=50, choices=currency_choices)
-    type_of_tour = models.ForeignKey(TypeOfTour, on_delete=models.CASCADE)
+    type_of_tour = models.ManyToManyField(TypeOfTour)
     age_requirements = models.CharField(max_length=50, choices=age_choices)
     duration = models.CharField(max_length=50, choices=duration_choices)
     travel_agent_id = models.ForeignKey(ToursTravelAgent, related_name='booking_travel_agent', on_delete=models.CASCADE)

@@ -68,12 +68,16 @@ class TourAdminFilter(admin.ModelAdmin):
     has_delete_permission = has_change_permission
 
 
+class TypeOfTourAdmin(admin.ModelAdmin):
+    model = TypeOfTour
+
+
 class TourAdmin(TourAdminFilter):
     """ admin page of Tours"""
     # model = Tour
-    list_display = ['creator', 'created_date', 'title', 'city', 'region', 'type_of_tour',
-                    'duration', 'tours_travel_agent',]
-    list_filter = ('city', 'region', 'type_of_tour',)
+    list_display = ['creator', 'created_date', 'title', 'city', 'region',
+                    'duration', 'tours_travel_agent']
+    list_filter = ('city', 'region',)
     exclude = ['creator']
     inlines = [TourImageAdmin]
 
@@ -90,10 +94,6 @@ class TourAdmin(TourAdminFilter):
         return obj.travel_agent_id.travel_agent_name
 
 
-class TypeOfTourAdmin(admin.ModelAdmin):
-    model = TypeOfTour
-
-
 class TourDetailsAdmin(admin.ModelAdmin):
     list_display = ['get_tour_name', 'tour_start_date', 'tour_end_date']
 
@@ -105,6 +105,6 @@ admin.site.register(Tour, TourAdmin)
 admin.site.register(ToursTravelAgent, ToursTravelAgentAdmin)
 admin.site.register(City, CityAdmin)
 admin.site.register(Region, RegionAdmin)
-admin.site.register(TypeOfTour, TypeOfTourAdmin)
+# admin.site.register(TypeOfTour, TypeOfTourAdmin)
 admin.site.register(Hotels, TourHotelAdmin)
 admin.site.register(TourDetails, TourDetailsAdmin)
