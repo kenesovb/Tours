@@ -157,7 +157,7 @@ SECRET_KEY = config('SECRET_KEY')
 DATABASES = {
     'default': dj_database_url.config(
         # default=config('DATABASE_URL')
-        default='postgres://xhsrvdqxudkoql:086bc8aae8ded2ecd0a02e621e0557130cd900b131a686c155d1ea3e7fb4c069@ec2-34-204-22-76.compute-1.amazonaws.com:5432/dakurf5bgmfe5c'
+        default='postgres://iaaiescpdvqmtg:10672e4fc6cf6ec45af89d9f3408e1c9b7d41edfaf25ac6776ee5aef6864ea5c@ec2-52-202-146-43.compute-1.amazonaws.com:5432/dbqiej4eopnvef'
     )
 }
 
