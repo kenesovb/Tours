@@ -25,10 +25,10 @@ TEMPLATE_DIRS = (( BASE_DIR +'/templates/' ),)
 SECRET_KEY = 'zo0ycy@9oyt&$2z)k7w%7=l4nefe@t^jpwh!72(q2d=8ve7=7a'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# DEBUG = True
 
-ALLOWED_HOSTS = ['*']
-# ALLOWED_HOSTS = ['tourismkz.herokuapp.com']
+# ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['tourismkz.herokuapp.com']
 
 # Application definition
 
@@ -144,22 +144,22 @@ PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 
 
 STATIC_DIR = os.path.join(BASE_DIR, 'static')
-# STATIC_ROOT = os.path.join(PROJECT_ROOT, 'staticfiles')
-# STATIC_URL = '/static/'
-# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATIC_ROOT = os.path.join(PROJECT_ROOT, 'staticfiles')
+STATIC_URL = '/static/'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
-# SECRET_KEY = config('SECRET_KEY')
+SECRET_KEY = config('SECRET_KEY')
 # DEBUG = config('DEBUG', default=False, cast=bool)
 
 
-# DATABASES = {
-#     'default': dj_database_url.config(
-#         # default=config('DATABASE_URL')
-#         default='postgres://xhsrvdqxudkoql:086bc8aae8ded2ecd0a02e621e0557130cd900b131a686c155d1ea3e7fb4c069@ec2-34-204-22-76.compute-1.amazonaws.com:5432/dakurf5bgmfe5c'
-#     )
-# }
+DATABASES = {
+    'default': dj_database_url.config(
+        # default=config('DATABASE_URL')
+        default='postgres://xhsrvdqxudkoql:086bc8aae8ded2ecd0a02e621e0557130cd900b131a686c155d1ea3e7fb4c069@ec2-34-204-22-76.compute-1.amazonaws.com:5432/dakurf5bgmfe5c'
+    )
+}
 
 CORS_ORIGIN_ALLOW_ALL = True
 
@@ -169,11 +169,5 @@ try:
 except ImportError:
     from .prod_settings import *
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_USE_TLS = True
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_HOST_USER = 'kenesovbt@gmail.com'
-EMAIL_HOST_PASSWORD = 'Bainurkenes1357!'
 
-# django_heroku.settings(locals())
+django_heroku.settings(locals())
