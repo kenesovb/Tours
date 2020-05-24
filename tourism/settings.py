@@ -22,15 +22,15 @@ TEMPLATE_DIRS = (( BASE_DIR +'/templates/' ),)
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'zo0ycy@9oyt&$2z)k7w%7=l4nefe@t^jpwh!72(q2d=8ve7=7a'
+# SECRET_KEY = 'zo0ycy@9oyt&$2z)k7w%7=l4nefe@t^jpwh!72(q2d=8ve7=7a'
 # production comment
-# SECRET_KEY = os.environ.get('SECRET_KEY')
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # when prod debug false, allowed_hosts = [tourismera]
-DEBUG = True
-ALLOWED_HOSTS = ['*']
-# ALLOWED_HOSTS = ['tourismera.herokuapp.com']
+DEBUG = False
+# ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['tourismera.herokuapp.com']
 
 # Application definition
 
@@ -156,12 +156,12 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 # DEBUG = config('DEBUG', default=False, cast=bool)
 
 # production comment
-# DATABASES = {
-#     'default': dj_database_url.config(
-#         # default=config('DATABASE_URL')
-#         default='postgres://iaaiescpdvqmtg:10672e4fc6cf6ec45af89d9f3408e1c9b7d41edfaf25ac6776ee5aef6864ea5c@ec2-52-202-146-43.compute-1.amazonaws.com:5432/dbqiej4eopnvef'
-#     )
-# }
+DATABASES = {
+    'default': dj_database_url.config(
+        # default=config('DATABASE_URL')
+        default='postgres://iaaiescpdvqmtg:10672e4fc6cf6ec45af89d9f3408e1c9b7d41edfaf25ac6776ee5aef6864ea5c@ec2-52-202-146-43.compute-1.amazonaws.com:5432/dbqiej4eopnvef'
+    )
+}
 
 # CORS_ORIGIN_ALLOW_ALL = True
 
