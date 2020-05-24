@@ -30,7 +30,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # when prod debug false, allowed_hosts = [tourismera]
 DEBUG = False
 # ALLOWED_HOSTS = ['*']
-ALLOWED_HOSTS = ['tourismera.herokuapp.com']
+ALLOWED_HOSTS = ['tourismera.herokuapp.com', 'travel-kazakhstan.herokuapp.com']
 
 # Application definition
 
@@ -140,7 +140,6 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
-STATIC_URL = '/static/'
 
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 
@@ -155,7 +154,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 # SECRET_KEY = config('SECRET_KEY')
 # DEBUG = config('DEBUG', default=False, cast=bool)
 
-# production comment
+# # production comment
 DATABASES = {
     'default': dj_database_url.config(
         # default=config('DATABASE_URL')
