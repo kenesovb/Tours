@@ -74,16 +74,20 @@ class UserDetailDeleteBooking(APIView):
 
 class UserDetailPDFView(APIView):
     """PDF of tour ticket """
+    permission_classes = [permissions.IsAuthenticated, ]
+
     def get(self, request, pk):
         user = get_object_or_404(User, username=self.request.user)
         book = get_object_or_404(Booking, pk=pk)
         start_date = str(book.tour_detail.tour_start_date)
         end_date = str(book.tour_detail.tour_end_date)
         total_amount = book.booking_number_of_persons * book.tour_detail.tour.price
+        type_of_tour = book.tour_detail.tour.type_of_tour.all()
         paragraph = {
             "FirstName": user.first_name,
             "LastName": user.last_name,
             "book": book,
+            "type_of_tour": type_of_tour,
             "start_date": start_date,
             "end_date": end_date,
             "total_amount": total_amount
@@ -98,6 +102,8 @@ class UserDetailPDFView(APIView):
 
 class UserDetailPDFViewDownload(APIView):
     """PDF of tour ticket """
+    permission_classes = [permissions.IsAuthenticated, ]
+
     def get(self, request, pk):
         user = get_object_or_404(User, username=self.request.user)
         book = get_object_or_404(Booking, pk=pk)

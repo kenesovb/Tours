@@ -18,9 +18,15 @@
         <p><font size="+4">End city: {{book.tour_detail.tour.tour_end_city}}</font></p>
         <p><font size="+4">Price for one person: {{book.tour_detail.tour.price}} {{book.tour_detail.tour.currency}}</font></p>
         <p><font size="+4">Age requirements: {{book.tour_detail.tour.age_requirements}}+</font></p>
-        <p><font size="+4">Tour type: {{book.tour_detail.tour.type_of_tour}}</font></p>
+        <p><font size="+4">Tour type: {% for type_tour in type_of_tour %}
+
+            {% if forloop.last %}
+        {{ type_tour }}.
+    {% else %}
+        {{ type_tour }},
+    {% endif %}
+        {% endfor %}</font></p>
         <p><font size="+4">Number of persons: {{book.booking_number_of_persons}}</font></p>
-        <p><font size="+4">Tour type: {{book.tour_detail.tour.type_of_tour}}</font></p>
           {% if book.tour_detail.tour.hotel %}
           <p style="border-bottom: solid"><font size="+4">Tour Hotel: {{book.tour_detail.tour.hotel}}</font></p>
         {% else %}
