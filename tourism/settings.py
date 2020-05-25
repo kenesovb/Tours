@@ -30,7 +30,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # when prod debug false, allowed_hosts = [tourismera]
 DEBUG = False
 ALLOWED_HOSTS = ['*']
-# ALLOWED_HOSTS = ['tourismera.herokuapp.com']
+# ALLOWED_HOSTS = ['tourismera.herokuapp.com', 'travel-kazakhstan.herokuapp.com']
 
 # Application definition
 
@@ -43,9 +43,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_summernote',
     'rest_framework',
+    'corsheaders',
     'rest_framework.authtoken',
     'djoser',
-    'corsheaders',
     'fornow',
     'storages',
 ]
@@ -81,6 +81,10 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'tourism.wsgi.application'
+CORS_ORIGIN_WHITELIST = [
+    'http://localhost:8080',
+    'https://travel-kazakhstan.heroku.app',
+]
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
@@ -142,7 +146,6 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
-STATIC_URL = '/static/'
 
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 
@@ -157,7 +160,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 AWS_LOCATION = 'static'
 AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
-AWS_STORAGE_BUCKET_NAME =os.environ.get('AWS_STORAGE_BUCKET_NAME')
+AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME')
 AWS_S3_CUSTOM_DOMAIN='%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
 AWS_S3_OBJECT_PARAMETERS = {
      'CacheControl': 'max-age=86400',
@@ -180,11 +183,10 @@ AWS_DEFAULT_ACL = None
 # SECRET_KEY = config('SECRET_KEY')
 # DEBUG = config('DEBUG', default=False, cast=bool)
 
-# production comment
 DATABASES = {
     'default': dj_database_url.config(
         # default=config('DATABASE_URL')
-        default='postgres://iaaiescpdvqmtg:10672e4fc6cf6ec45af89d9f3408e1c9b7d41edfaf25ac6776ee5aef6864ea5c@ec2-52-202-146-43.compute-1.amazonaws.com:5432/dbqiej4eopnvef'
+        default= os.environ.get('DATABASE_URL')
     )
 }
 
