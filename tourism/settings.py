@@ -22,9 +22,9 @@ TEMPLATE_DIRS = (( BASE_DIR +'/templates/' ),)
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-# SECRET_KEY = 'zo0ycy@9oyt&$2z)k7w%7=l4nefe@t^jpwh!72(q2d=8ve7=7a'
+SECRET_KEY = 'zo0ycy@9oyt&$2z)k7w%7=l4nefe@t^jpwh!72(q2d=8ve7=7a'
 # production comment
-SECRET_KEY = os.environ.get('SECRET_KEY')
+# SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # when prod debug false, allowed_hosts = [tourismera]
@@ -150,7 +150,7 @@ USE_TZ = True
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 
 
-STATIC_DIR = os.path.join(BASE_DIR, 'static')
+STATIC_DIR = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_ROOT = os.path.join(PROJECT_ROOT, 'staticfiles')
 STATIC_URL = '/static/'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
@@ -165,9 +165,8 @@ AWS_S3_CUSTOM_DOMAIN='%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
 AWS_S3_OBJECT_PARAMETERS = {
      'CacheControl': 'max-age=86400',
 }
-DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
-# STATICFILES_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
