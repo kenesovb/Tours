@@ -123,13 +123,13 @@ class TourPageSerializers(serializers.ModelSerializer):
     tour_detail = TourDetailsSerializers(many=True)
     travel_agent_id = TravelAgentSerializer()
     hotel = HotelSerializers()
-    provided_service = ProvidedServicesSerializer(many=True)
+    provided_services = ProvidedServicesSerializer(many=True)
 
     class Meta:
         model = Tour
         fields = ('creator', 'id', 'title', 'text', 'images', 'city', 'duration',  'type_of_tour', 'currency',
                   'age_requirements', 'price', 'reviews', 'average_review', 'tour_detail', 'travel_agent_id', 'hotel',
-                  'provided_service', 'tour_rating')
+                  'provided_services', 'tour_rating')
 
     def get_average_review(self, obj):
         av = TourReview.objects.filter(id=obj.id).aggregate(avg_rating=Avg('review_rating', output_field=models.IntegerField()))
