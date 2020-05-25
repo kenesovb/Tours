@@ -48,6 +48,9 @@ class TourCommentsAdmin(admin.StackedInline):
     model = TourReview
     list_display = ['tour', 'comment_creator', 'comment_text', ]
 
+class BookingAdmin(admin.StackedInline):
+    model = Booking
+
 
 class TourAdminFilter(admin.ModelAdmin):
     def get_queryset(self, request):
@@ -100,7 +103,7 @@ class TourAdmin(TourAdminFilter):
 
 class TourDetailsAdmin(admin.ModelAdmin):
     list_display = ['get_tour_name', 'tour_start_date', 'tour_end_date']
-
+    inlines = [BookingAdmin,]
     def get_tour_name(self, obj):
         return obj.tour.title
 
