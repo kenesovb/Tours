@@ -169,17 +169,17 @@ class BookingPayView(APIView):
         message = Mail(
             from_email='kenesovbt@gmail.com',
             to_emails=user.email,
-            subject='Information about your' + bookings.tour_detail.tour.title + 'tour',
-            html_content='<h2>Hello, dear Customer! </h2> <br> <h3>Below some information about your tour </h3> <br>' +
+            subject='Information about your ' + bookings.tour_detail.tour.title + ' tour',
+            html_content='<h2>Hello, dear Traveller! </h2> <br> <h3>Below some information about your tour </h3> <br>' +
                          '<strong>' + bookings.tour_detail.tour.title + '</strong>' +
-                         '<p> Starting date: <strong>' + str(bookings.tour_detail.tour_start_date) + '</strong> </p>' +
+                         '<p> Star date: <strong>' + str(bookings.tour_detail.tour_start_date) + '</strong> </p>' +
                          '<p> End date: <strong>' + str(bookings.tour_detail.tour_end_date) + '</strong> </p>' +
                          '<p> Starting city: <strong>' + str(
                 bookings.tour_detail.tour.city.city_name) + '</strong> </p>' +
                          '<p> Ending city: <strong>' + str(bookings.tour_detail.tour.tour_end_city) + '</strong> </p>' +
                          '<p> Price: <strong>' + str(bookings.tour_detail.tour.price) + ' ' + str(bookings.tour_detail.tour.currency) + '</strong> </p>' +
                          '<p> Status: <strong>' + str(bookings.booking_status) + '</strong> </p>' +
-                         '<p>you can download your ticket <a href="https://tourismera.herokuapp.com/api/v1/fornow/users/me/' + str(bookings.id) + '/pdf/download"> here </a> /p> <br><br><br><br>' +
+                         '<p>you can download your ticket <a href="https://tourismera.herokuapp.com/api/v1/fornow/users/me/' + str(bookings.id) + '/pdf/download"> here </a> </p> <br><br><br><br>' +
                          '<img src="' + image.file.url + '" width="450px" height="450px">' +
                          '<h3>Have fun, hope you will enjoy your vacation across Kazakhstan</h3>' +
                          '<h3>best regards from travel-kazakhstan team.</h3>'
