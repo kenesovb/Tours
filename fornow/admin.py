@@ -40,6 +40,10 @@ class TourImageAdmin(admin.StackedInline):
     model = TourImage
 
 
+class ProvidedServiceAdmin(admin.ModelAdmin):
+    model = ProvidedServices
+
+
 class TourCommentsAdmin(admin.StackedInline):
     model = TourReview
     list_display = ['tour', 'comment_creator', 'comment_text', ]
@@ -49,7 +53,7 @@ class TourAdminFilter(admin.ModelAdmin):
     def get_queryset(self, request):
         qs = super(TourAdminFilter, self).get_queryset(request)
         if request.user.is_superuser:
-            return qs.filter(creator=request.user)
+            return qs.all()
         else:
             return qs.filter(creator=request.user)
 
@@ -104,6 +108,7 @@ class TourDetailsAdmin(admin.ModelAdmin):
 admin.site.register(Tour, TourAdmin)
 admin.site.register(ToursTravelAgent, ToursTravelAgentAdmin)
 admin.site.register(City, CityAdmin)
+admin.site.register(ProvidedServices, ProvidedServiceAdmin)
 admin.site.register(Region, RegionAdmin)
 admin.site.register(TypeOfTour, TypeOfTourAdmin)
 admin.site.register(Hotels, TourHotelAdmin)

@@ -94,6 +94,15 @@ class TypeOfTour(models.Model):
         verbose_name = 'Types of Tour'
 
 
+class ProvidedServices(models.Model):
+    """ Provided services for tour """
+
+    service_name = models.CharField(max_length=150, verbose_name='Kind of services')
+
+    def __str__(self):
+        return self.service_name
+
+
 class Tour(models.Model):
     """Tours model """
     duration_choices = (
@@ -127,6 +136,7 @@ class Tour(models.Model):
     price = models.IntegerField()
     currency = models.CharField(max_length=50, choices=currency_choices)
     type_of_tour = models.ManyToManyField(TypeOfTour)
+    provided_services = models.ManyToManyField(ProvidedServices)
     age_requirements = models.CharField(max_length=50, choices=age_choices)
     duration = models.CharField(max_length=50, choices=duration_choices)
     travel_agent_id = models.ForeignKey(ToursTravelAgent, related_name='booking_travel_agent', on_delete=models.CASCADE)
