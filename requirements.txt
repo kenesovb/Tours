@@ -62,4 +62,3 @@ wrapt==1.11.2
 xhtml2pdf==0.2.4
 django-storages
 boto3
-pillow
