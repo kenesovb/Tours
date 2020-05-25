@@ -10,8 +10,7 @@ from django.core.mail import send_mail, EmailMessage
 from io import BytesIO
 from django.http import HttpResponse
 from xhtml2pdf import pisa
-from reportlab.pdfgen import canvas
-from reportlab.lib.pagesizes import A4
+
 
 from .models import Tour, Booking, TourImage, Hotels, TourDetails
 from .serializers import (TourSerializers, TourPageSerializers, UserPageSerializers, TourReviewsPostSerializers, BookingPostSerializers, HotelSerializers,
