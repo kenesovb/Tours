@@ -29,8 +29,8 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 # when prod debug false, allowed_hosts = [tourismera]
 DEBUG = False
-# ALLOWED_HOSTS = ['*']
-ALLOWED_HOSTS = ['tourismera.herokuapp.com', 'travel-kazakhstan.herokuapp.com']
+ALLOWED_HOSTS = ['*']
+# ALLOWED_HOSTS = ['tourismera.herokuapp.com', 'travel-kazakhstan.herokuapp.com']
 
 # Application definition
 
@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_summernote',
     'rest_framework',
+    'corsheaders',
     'rest_framework.authtoken',
     'djoser',
     'fornow',
@@ -79,6 +80,10 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'tourism.wsgi.application'
+CORS_ORIGIN_WHITELIST = [
+    'http://localhost:8080',
+    'https://travel-kazakhstan.heroku.app',
+]
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
@@ -162,7 +167,7 @@ DATABASES = {
     )
 }
 
-# CORS_ORIGIN_ALLOW_ALL = True
+CORS_ORIGIN_ALLOW_ALL = True
 
 
 try:
